@@ -2,6 +2,7 @@ package com.cydeo.practice;
 
 import com.cydeo.pojos.Location;
 import com.cydeo.pojos.Room;
+import com.cydeo.pojos.Student;
 import com.cydeo.utilities.BookITTestBase;
 import com.cydeo.utilities.BookITUtils;
 import com.cydeo.utilities.ConfigurationReader;
@@ -187,19 +188,67 @@ public class practice extends BookITTestBase {
         assertThat(response.path("timelines[0].id"),is(equalTo(postRequestMap.get("timeline-id"))));
 
 
+
+
+
+
+    }
+
+
+    @Test
+    public void test7 () {
+
+
+        Map<String, Object> requestMap = new LinkedHashMap<>();
+
+        requestMap.put("first-name","Petar");
+        requestMap.put("last-name","Petrovic");
+        requestMap.put("email","petarpetrovic92@gmail.com");
+        requestMap.put("password","petar2222");
+        requestMap.put("role","student-team-member");
+        requestMap.put("campus-location","VA");
+        requestMap.put("batch-number",20);
+        requestMap.put("team-name","TheyBite");
+
+
+        JsonPath jsonPath = given().accept(ContentType.JSON)
+                .and()
+                .contentType(ContentType.JSON)
+                .and()
+                .headers("Authorization", BookITUtils.getTokenByRole("teacher"))
+                .queryParams(requestMap)
+                .log().all()
+                .and()
+                .when()
+                .post("/api/students/student")
+                .then()
+                .statusCode(201)
+                .log().all().extract().jsonPath();
+
+        int entryiId = jsonPath.getInt("entryiId");
+
+
         given().accept(ContentType.JSON)
                 .and()
                 .headers("Authorization",BookITUtils.getTokenByRole("teacher"))
                 .and()
-                .pathParam("id",conference_id)
+                .pathParam("id",entryiId)
+                .when()
+                .get("/api/students/{id}")
+                .then()
+                .statusCode(200)
+                .log().all();
+
+        given().accept(ContentType.JSON)
                 .and()
-                .delete("/api/conferences/{id}")
+                .headers("Authorization",BookITUtils.getTokenByRole("teacher"))
+                .and()
+                .pathParam("id",entryiId)
+                .and()
+                .delete("/api/students/{id}")
                 .then()
                 .statusCode(204)
                 .log().all();
-
-
-
 
 
 
