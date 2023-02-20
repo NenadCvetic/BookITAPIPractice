@@ -253,6 +253,35 @@ public class practice extends BookITTestBase {
 
 
     }
+    @Test
+    public void test8 (){
+       Map<String,Object> putMap= new LinkedHashMap<>();
+       putMap.put("first-name","Nenad");
+       putMap.put("last-name","Volkan");
+       putMap.put("email","nenadvolkan@gmail.com");
+       putMap.put("password",654321);
+       putMap.put("role","student-team-member");
+
+        Response response = given().accept(ContentType.JSON)
+                .and().contentType(ContentType.JSON)
+                .headers("Authorization", BookITUtils.getTokenByRole("teacher"))
+                .and()
+                .pathParam("id", 17131)
+                .and()
+                .queryParams(putMap)
+                .when()
+                .put("/api/students/{id}")
+                .then()
+                .statusCode(200)
+                .log().all()
+                .extract().response();
+
+           int id= response.path("id");
+           System.out.println("id = " + id);
+
+
+
+    }
 
 
 
