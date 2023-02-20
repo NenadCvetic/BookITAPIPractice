@@ -277,7 +277,7 @@ public class practice extends BookITTestBase {
                 .extract().response();
 
            int id= response.path("id");
-        System.out.println("id = " + id);
+           System.out.println("id = " + id);
 
 
 
